@@ -66,7 +66,7 @@ python get_embedding.py \
 ## 1. Environment Setup
 
 step 1 Download code from the [official repository](https://github.com/doriszmr/scATD) and set up environment
-step 2 This project includes original code in `./Res_VAE_pretraining/scATD/original_scATD_project` 
+step 2 This project includes original code in `./Res_VAE_pretraining/original_project` 
 
 ##  2. Res_VAE Training Procedure
 
