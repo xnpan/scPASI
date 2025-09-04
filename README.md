@@ -60,3 +60,42 @@ python get_embedding.py \
   --save_path ./output/single_cell_data \
   --tgthighres f1
 ```
+
+## Res-VAE transfer learning module
+
+## 1. Environment Setup
+
+1. Download code from the [official repository](https://github.com/doriszmr/scATD) and set up environment
+2. This project includes original code in `./Res_VAE_pretraining/scATD/original_scATD_project` 
+
+##  2. Res_VAE Training Procedure
+
+### Step 1: Hyperparameter Optimization
+
+```bash
+python ./Res_VAE_pretraining/skf_pretraining/code/VAE_sf_Res-VAE_hyperparam_pretraining.py
+```
+
+Note: Modify these parameters directly in the script:
+
+- `open_path`: Path to input features (.npy)
+- `save_path_outer`: Output directory
+- `file_prefix`: File naming prefix
+
+Output: Optimal hyperparameter configuration file (`VAE_sf_best_hyperparameters.xlsx`)
+
+### Step 2: Pretraining with Optimal Hyperparameters
+
+```bash
+python ./Res_VAE_pretraining/pretraining_after_hyperparameter/code/VAE_sf_Res-VAEpretraining.py \
+    --open_path ./data/ \
+    --save_path_outer ./output \
+    --open_path_conference_data ./reference_data \
+    --file_prefix scRNA-seq_panglao \
+    --epoch_start_for_loss_plot_only 1 \
+    --batch_size 128 \
+    --REC_beta 1000 \
+    --best_parameter_name VAE_sf_best_hyperparameters.xlsx
+```
+
+## statistical feature learning module & cell phenotype identification module
