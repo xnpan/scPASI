@@ -1,0 +1,1 @@
+All scRNA-seq data and bulk RNA-seq data can be downloaded through the data information provided in the article.
