@@ -60,19 +60,3 @@ python get_embedding.py \
   --save_path ./output/single_cell_data \
   --tgthighres f1
 ```
-
-##  Directory Structure
-
-```
-scFoundation-main/
-├── preprocessing/
-│   ├── code/ (preprocessing scripts)
-│   ├── data/ (input data)
-│   └── output/ (preprocessing output)
-└── model/
-    ├── get_embedding.py
-    ├── examples/single_cell_data/ (preprocessed .h5ad files)
-    └── output/single_cell_data/ (feature output)
-```
-
-## Res-VAE transfer learning module
