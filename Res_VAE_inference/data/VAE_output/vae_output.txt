@@ -1,0 +1,1 @@
+The files in the feature_output folder are the feature embeddings extracted by scFoundation. These feature embeddings are used as input to the pre-trained Res-VAE model. The resulting transferred embeddings for cells and samples are then saved in that folder.
