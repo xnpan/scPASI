@@ -6,67 +6,71 @@ scPASI is a robust framework that extracts features from transcriptomic data and
 
 scPASI includes four sub-modules: PFM-based feature extraction module, Res-VAE transfer learning module, statistical feature learning module, and cell phenotype identification module.
 
+
+
 ## PFM-based feature extraction module
 
 ##  1. Environment Setup
 
-1. Download code from the [official repository](https://github.com/biomap-research/scFoundation) and set up environment
+1. Download code from the [official repository](https://github.com/biomap-research/scFoundation) and follow the tutorial to set up environment
 2. This project includes original code in `./PFM_feature_extraction/scfoundation/original_scfoundation_project` 
 
 ##  2. Data Preprocessing
 
-Place raw csv files (cells/samples × genes, Gene Symbols) in `./scFoundation-main/preprocessing/raw_csvdata/`, then run:
+Place raw csv files (cells/samples × genes, Gene Symbols) in `./PFM_feature_extraction/data/raw_csvdata/`, then run:
 
 ```bash
-python ./scFoundation/code/csv_preprocess_under_scfoundation.py \
-  --system_path ./scFoundation-main/preprocessing \
-  --file_name ./raw_csvdata \
-  --output_dir ./h5ad_output \
+python ./PFM_feature_extraction/scFoundation/code/csv_preprocess_under_scfoundation.py \
+  --system_path ./scFoundation-main/preprocessing/ \
+  --file_name ./PFM_feature_extraction/data/raw_csvdata/ \
+  --output_dir ./PFM_feature_extraction/data/h5ad_output \
   --sparse_matrix True
 ```
 
-Output will be saved to `./h5ad_output/`
+Output will be saved to `./PFM_feature_extraction/data/h5ad_output`
 
 ##  3. Feature Extraction
 
-Place preprocessed `.h5ad` files in `./scFoundation-main/model/examples/single_cell_data/`, then run:
+Place preprocessed `.h5ad` files in `./PFM_feature_extraction/data/h5ad_output`, then run:
 
 ### For Bulk RNA-seq data:
 
 ```bash
-python get_embedding.py \
-  --task_name AllbulkDEll \
+python ./PFM_feature_extraction/scFoundation/code/extract_feature_embedding.py \
+  --task_name YOUR_BULK_TASK \
   --input_type bulk \
   --output_type cell \
   --pool_type all \
-  --data_path ./examples/single_cell_data/preprocessed_all_ALL_Bulk_Dell.h5ad \
+  --data_path ./PFM_feature_extraction/data/h5ad_output/preprocessed_all_YOUR_BULK_TASK.h5ad \
   --pre_normalized F \
   --version rde \
-  --save_path ./output/single_cell_data \
+  --save_path ./PFM_feature_extraction/data/feature_output \
   --tgthighres f1
 ```
 
 ### For Single Cell RNA-seq data:
 
 ```bash
-python get_embedding.py \
-  --task_name FA34 \
+python ./PFM_feature_extraction/scFoundation/code/extract_feature_embedding.py \
+  --task_name YOUR_SC_TASK \
   --input_type singlecell \
   --output_type cell \
   --pool_type all \
-  --data_path ./examples/single_cell_data/preprocessed_GSE149214.h5ad \
+  --data_path ./PFM_feature_extraction/data/h5ad_output/preprocessed_all_YOUR_SC_TASK.h5ad \
   --pre_normalized F \
   --version rde \
-  --save_path ./output/single_cell_data \
+  --save_path ./PFM_feature_extraction/data/feature_output \
   --tgthighres f1
 ```
+
+
 
 ## Res-VAE transfer learning module
 
 ## 1. Environment Setup
 
-1. Download code from the [official repository](https://github.com/doriszmr/scATD) and set up environment
-2. This project includes original code in `./Res_VAE_pretraining/original_project` 
+1. Download code from the [official repository](https://github.com/doriszmr/scATD) and follow the tutorial to set up environment
+2. This project includes original code in `./Res_VAE_pretraining/scATD/original_scATD_project` 
 
 ##  2. Res_VAE Training Procedure
 
@@ -87,7 +91,7 @@ Output: Optimal hyperparameter configuration file (`VAE_sf_best_hyperparameters.
 ### Step 2: Pretraining with Optimal Hyperparameters
 
 ```bash
-python ./Res_VAE_pretraining/pretraining_after_hyperparameter/code/VAE_sf_Res-VAEpretraining.py \
+python ./ResVAE_pretraining/pretraining_after_hyperparameter/code/VAE_sf_Res-VAEpretraining.py \
     --open_path ./data/ \
     --save_path_outer ./output \
     --open_path_conference_data ./reference_data \
@@ -98,8 +102,25 @@ python ./Res_VAE_pretraining/pretraining_after_hyperparameter/code/VAE_sf_Res-VA
     --best_parameter_name VAE_sf_best_hyperparameters.xlsx
 ```
 
-## Statistical feature learning module & Cell phenotype identification module
-## 1.  Process Transferred Embeddings
+
+
+## Statistical feature learning module 
+
+## 1. Get Transferred Embeddings
+
+```bash
+python ./Res_VAE_inference/code/scRNA-seq_Res_VAE_inference.py \
+    --open_path ./PFM_feature_extraction/data/feature_output \
+    --save_path_outer ./Res_VAE_inference/data/VAE_output \
+    --open_path_conference_data ./Res_VAE_inference/data/open_path_conference_data \
+    --file_prefix YOUR_FILE \
+    --model_parameters_file checkpoint_fold1_epoch_24.pth \
+    --best_parameter_name VAE_sf_best_hyperparameters.xlsx \
+    --execute_model_post_analysis False \
+    --batch_size 32 
+```
+
+## 2.  Process Transferred Embeddings
 
 Run the Jupyter notebook `transferred_embeddings_process.ipynb` to:
 
@@ -118,7 +139,9 @@ Run the Jupyter notebook `transferred_embeddings_process.ipynb` to:
 - UMAP coordinates for visualization
 - Processed embeddings for downstream analysis
 
-## 2. Identify Phenotype-Associated Cell Subpopulations
+## Cell phenotype identification module
+
+##  Identify Phenotype-Associated Cell Subpopulations
 
 Run the R script `cell_phenotype_identification.R` to:
 
