@@ -1,0 +1,1 @@
+scATD-main.zip can download from Github (https://github.com/doriszmr/scATD).
