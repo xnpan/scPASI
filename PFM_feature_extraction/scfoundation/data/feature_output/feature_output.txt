@@ -1,1 +1,0 @@
-The feature embeddings of cells and samples extracted from the h5ad file using extract_feature_embedding.py will be automatically saved in this folder.
