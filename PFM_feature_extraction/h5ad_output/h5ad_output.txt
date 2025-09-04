@@ -1,1 +1,0 @@
-The h5ad file generated after preprocessing the raw_csvdata using csv_preprocess_under_scfoundation.py will be automatically saved in this folder.
