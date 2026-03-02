@@ -45,7 +45,7 @@ data_embedding$y<-as.integer(data_embedding$y)
 # 1. SGL
 fit1 <- SGL(data_embedding, leidengroup, type = "logit", alpha = 0.5)
 lam1 <- fit1[['lambdas']]
-cvfit1 <- cvSGL(data_embedding, leidengroup, type = 'logit', nfold = 5, alpha = 0.5, lambdas = lam1)
+cvfit1 <- cvSGL(data_embedding, leidengroup, type = 'logit', nfold = 10, alpha = 0.5, lambdas = lam1)
 error1 <- cvfit1$lldiff
 h1 <- which.min(error1)
 b1 <- fit1[["beta"]][, h1]
